@@ -5,6 +5,13 @@ using Prime31;
 
 public class PlayerController : MonoBehaviour
 {
+    // keyboard config
+    public KeyCode leftKey = KeyCode.LeftArrow;
+    public KeyCode rightKey = KeyCode.RightArrow;
+    public KeyCode jumpKey = KeyCode.UpArrow;
+    public KeyCode downKey = KeyCode.DownArrow;
+    public KeyCode shootKey = KeyCode.S;
+
 	// movement config
 	public float gravity = -25f;
 	public float runSpeed = 8f;
@@ -73,7 +80,7 @@ public class PlayerController : MonoBehaviour
 			_velocity.y = 0;
         }
 
-		if( Input.GetKey( KeyCode.RightArrow ) )
+		if( Input.GetKey( rightKey ) )
 		{
 			normalizedHorizontalSpeed = 1;
 			if( transform.localScale.x < 0f )
@@ -84,7 +91,7 @@ public class PlayerController : MonoBehaviour
 				//_animator.Play( Animator.StringToHash( "Run" ) );
             }
 		}
-		else if( Input.GetKey( KeyCode.LeftArrow ) )
+		else if( Input.GetKey( leftKey ) )
 		{
 			normalizedHorizontalSpeed = -1;
 			if( transform.localScale.x > 0f )
@@ -107,7 +114,7 @@ public class PlayerController : MonoBehaviour
 		}
 
         // allow double jumping
-		if( !_hasDoubleJumped && Input.GetKeyDown( KeyCode.UpArrow ) )
+		if( !_hasDoubleJumped && Input.GetKeyDown( jumpKey ) )
 		{
             if (!_controller.isGrounded)
             {
@@ -128,7 +135,7 @@ public class PlayerController : MonoBehaviour
 
 		// if holding down bump up our movement amount and turn off one way platform detection for a frame.
 		// this lets uf jump down through one way platforms
-		if( _controller.isGrounded && Input.GetKey( KeyCode.DownArrow ) )
+		if( _controller.isGrounded && Input.GetKey( downKey ) )
 		{
 			_velocity.y *= 3f;
 			_controller.ignoreOneWayPlatformsThisFrame = true;
@@ -142,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
     void handleInput()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(shootKey))
         {
             GameObject bombObject = Instantiate (bombPrefab, transform.position, Quaternion.identity) as GameObject;
 
