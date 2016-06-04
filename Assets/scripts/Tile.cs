@@ -5,6 +5,7 @@ public class Tile : MonoBehaviour
 {
     private Tile[] neighbours = new Tile[8];
 
+    /*
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Bullet"))
@@ -19,6 +20,7 @@ public class Tile : MonoBehaviour
             GetComponent<BoxCollider2D>().isTrigger = false;
         }
     }
+    */
 
     public void setNeighbour(TileDirection direction, Tile neighbour)
     {

@@ -3,9 +3,8 @@ using System.Collections;
 
 public class Bomb : MonoBehaviour 
 {
-    public int maxTouchCount = 5;
-
-    private Tile lastTileTouched;
+    public float explosionDelayInSec = 2f;
+    public float explosionRadius = 5f;
     private bool isExploding = false;
     private float destroyDelay = 0.5f;
 
@@ -19,35 +18,14 @@ public class Bomb : MonoBehaviour
         checkPlayerCollision(other);
     }
 
+    void Start()
+    {
+        StartCoroutine(ExecuteAfterTime(explosionDelayInSec));
+    }
+        
 	void Update () 
     {
         transform.rotation = Quaternion.identity;
-        if (maxTouchCount == 0)
-        {
-            CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
-            circleCollider.isTrigger = true;
-            circleCollider.radius = 5f;
-
-            ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
-            for (int i = 0; i < particleSystems.Length; i++)
-            {
-                if (particleSystems[i].name == "Explosion")
-                {
-                    particleSystems[i].Play();
-                    isExploding = true;
-
-                    break;
-                }
-            }
-        }
-
-        if (maxTouchCount < 0)
-        {
-            CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
-            circleCollider.radius = 0.5f;
-            circleCollider.isTrigger = false;
-            Destroy(this.gameObject, destroyDelay);
-        }
 	}
 
     private void checkPlayerCollision(Collider2D other)
@@ -60,11 +38,34 @@ public class Bomb : MonoBehaviour
                 playerDeath.die();
             }
         }
+            
+        if (isExploding && other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            other.gameObject.SetActive(false);
+        }
     }
 
-    public void touchedGround(Tile touchedTile)
+    IEnumerator ExecuteAfterTime(float time)
     {
-        maxTouchCount--;
-        lastTileTouched = touchedTile;
+        yield return new WaitForSeconds(time);
+
+        // Code to execute after the delay
+        CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
+        circleCollider.isTrigger = true;
+        circleCollider.radius = explosionRadius;
+
+        ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < particleSystems.Length; i++)
+        {
+            if (particleSystems[i].name == "Explosion")
+            {
+                particleSystems[i].Play();
+                isExploding = true;
+
+                break;
+            }
+        }
+
+        Destroy(this.gameObject, destroyDelay);
     }
 }
