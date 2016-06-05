@@ -172,6 +172,10 @@ public class PlayerController : MonoBehaviour
         {
             GameObject bombObject = Instantiate (bombPrefab, transform.position, Quaternion.identity) as GameObject;
 
+            Bomb bomb = bombObject.GetComponent<Bomb>();
+
+            bomb.setOwner(gameObject);
+
             Rigidbody2D body = bombObject.GetComponent<Rigidbody2D>();
             body.AddForce(
                 new Vector2(

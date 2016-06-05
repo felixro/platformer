@@ -5,8 +5,16 @@ public class Bomb : MonoBehaviour
 {
     public float explosionDelayInSec = 2f;
     public float explosionRadius = 5f;
+
     private bool isExploding = false;
     private float destroyDelay = 0.5f;
+    private GameObject _owner;
+
+
+    public void setOwner(GameObject owner)
+    {
+        _owner = owner;
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -30,12 +38,17 @@ public class Bomb : MonoBehaviour
 
     private void checkPlayerCollision(Collider2D other)
     {
-        if (isExploding && other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            PlayerDeath playerDeath = other.GetComponentInParent<PlayerDeath>();
-            if (playerDeath != null)
+            if (isExploding || ! other.gameObject.name.Equals(_owner.name))
             {
-                playerDeath.die();
+                Explode();
+
+                PlayerDeath playerDeath = other.GetComponentInParent<PlayerDeath>();
+                if (playerDeath != null)
+                {
+                    playerDeath.die();
+                }
             }
         }
             
@@ -49,7 +62,11 @@ public class Bomb : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
 
-        // Code to execute after the delay
+        Explode();
+    }
+
+    private void Explode()
+    {
         CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
         circleCollider.isTrigger = true;
         circleCollider.radius = explosionRadius;
