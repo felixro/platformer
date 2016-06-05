@@ -5,12 +5,14 @@ using Prime31;
 
 public class PlayerController : MonoBehaviour
 {
+    public KeyboardManager keyboardManager;
+
     // keyboard config
-    public KeyCode leftKey = KeyCode.LeftArrow;
-    public KeyCode rightKey = KeyCode.RightArrow;
-    public KeyCode jumpKey = KeyCode.UpArrow;
-    public KeyCode downKey = KeyCode.DownArrow;
-    public KeyCode shootKey = KeyCode.S;
+    private KeyCode leftKey;
+    private KeyCode rightKey;
+    private KeyCode jumpKey;
+    private KeyCode downKey;
+    private KeyCode shootKey;
 
 	// movement config
 	public float gravity = -25f;
@@ -39,6 +41,22 @@ public class PlayerController : MonoBehaviour
 		_controller.onControllerCollidedEvent += onControllerCollider;
 		_controller.onTriggerEnterEvent += onTriggerEnterEvent;
 		_controller.onTriggerExitEvent += onTriggerExitEvent;
+
+        if (name.Contains("Player"))
+        {
+            leftKey = keyboardManager.player1LeftKey;
+            rightKey = keyboardManager.player1RightKey;
+            jumpKey = keyboardManager.player1JumpKey;
+            downKey = keyboardManager.player1DownKey;
+            shootKey = keyboardManager.player1ShootKey;            
+        }else
+        {
+            leftKey = keyboardManager.player2LeftKey;
+            rightKey = keyboardManager.player2RightKey;
+            jumpKey = keyboardManager.player2JumpKey;
+            downKey = keyboardManager.player2DownKey;
+            shootKey = keyboardManager.player2ShootKey;    
+        }
 	}
 
 
@@ -91,7 +109,7 @@ public class PlayerController : MonoBehaviour
 				//_animator.Play( Animator.StringToHash( "Run" ) );
             }
 		}
-		else if( Input.GetKey( leftKey ) )
+        else if( Input.GetKey( leftKey ) )
 		{
 			normalizedHorizontalSpeed = -1;
 			if( transform.localScale.x > 0f )
