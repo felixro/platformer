@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour 
 {
+    public float gameFieldBoundary = -50f;
     public float respawnTime = 2f;
     public KeyboardManager keyboardManager;
 
@@ -43,16 +44,26 @@ public class GameManager : MonoBehaviour
             StartCoroutine(RespawnEnemy());
             isRespawning = true;
         }
+
+        if (player.transform.position.y <= gameFieldBoundary)
+        {
+            resetPlayerPosition();
+        }
+
+        if (enemy.transform.position.y <= gameFieldBoundary)
+        {
+            resetEnemyPosition();
+        }
     }
 
     private void BeginGame()
     {
         level.buildLevel();
 
-        player.transform.position = new Vector2(2f, 1f);
+        resetPlayerPosition();
         player.SetActive(true);
 
-        spawnEnemy();
+        resetEnemyPosition();
     }
 
     private void RestartGame()
@@ -61,7 +72,12 @@ public class GameManager : MonoBehaviour
         BeginGame();
     }
 
-    private void spawnEnemy()
+    private void resetPlayerPosition()
+    {
+        player.transform.position = new Vector2(2f, 1f);        
+    }
+
+    private void resetEnemyPosition()
     {
         enemy.transform.position = new Vector2(Random.Range(1f,30f), 1f);
         enemy.SetActive(true);
@@ -71,7 +87,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(respawnTime);
 
-        spawnEnemy();
+        resetEnemyPosition();
         isRespawning = false;
     }
 }
