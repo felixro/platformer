@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
 	private Animator _animator;
 	private RaycastHit2D _lastControllerColliderHit;
 	private Vector3 _velocity;
+    private bool _hasJumped = false;
     private bool _hasDoubleJumped = false;
 
 	void Awake()
@@ -140,7 +141,7 @@ public class PlayerController : MonoBehaviour
             }
 
 			_velocity.y = Mathf.Sqrt( 2f * jumpHeight * -gravity );
-			//_animator.Play( Animator.StringToHash( "Jump" ) );
+            _animator.SetTrigger("Jump");
 		}
 
 
