@@ -3,7 +3,7 @@ using System.Collections;
 
 public class KeyboardManager : MonoBehaviour 
 {
-    public KeyCode restartGameKey = KeyCode.R;
+    public KeyCode restartGameKey;
 
     public KeyCode player1LeftKey = KeyCode.LeftArrow;
     public KeyCode player1RightKey = KeyCode.RightArrow;
