@@ -7,27 +7,44 @@ public class GameManager : MonoBehaviour
     public float respawnTime = 2f;
     public KeyboardManager keyboardManager;
 
-    public Camera cameraPrefab;
+    public Camera player1CameraPrefab;
+    public Camera player2CameraPrefab;
 
-    public GameObject playerPrefab;
-    public GameObject enemyPrefab;
+    public GameObject player1Prefab;
+    public GameObject player2Prefab;
     public Level level;
 
-    private GameObject player;
-    private GameObject enemy;
-    private Camera camera;
+    private GameObject player1;
+    private PlayerDeath player1Death;
 
-    private bool isRespawning = false;
+    private GameObject player2;
+    private PlayerDeath player2Death;
+
+    private Camera player1Camera;
+    private Camera player2Camera;
+
+    private float leftSpawnPoint = 1f;
+    private float rightSpawnPoint = 30f;
 
     void Start ()
     {
-        player = Instantiate (playerPrefab, new Vector2(2f, 2f), Quaternion.identity) as GameObject;
-        enemy = Instantiate (enemyPrefab, new Vector2(20f, 5f), Quaternion.identity) as GameObject;
+        {
+            player1 = Instantiate (player1Prefab, Vector2.one, Quaternion.identity) as GameObject;
+            player1Death = player1.GetComponent<PlayerDeath>();
 
-        camera = Instantiate (cameraPrefab, new Vector2(20f, 5f), Quaternion.identity) as Camera;
+            player1Camera = Instantiate (player1CameraPrefab, new Vector2(20f, 5f), Quaternion.identity) as Camera;
+            SmoothFollow player1Follow = player1Camera.GetComponent<SmoothFollow>();
+            player1Follow.setTarget(player1.transform);
+        }
 
-        SmoothFollow smoothFollow = camera.GetComponent<SmoothFollow>();
-        smoothFollow.setTarget(player.transform);
+        {
+            player2 = Instantiate (player2Prefab, Vector2.one, Quaternion.identity) as GameObject;
+            player2Death = player2.GetComponent<PlayerDeath>();
+
+            player2Camera = Instantiate (player2CameraPrefab, new Vector2(20f, 5f), Quaternion.identity) as Camera;
+            SmoothFollow player2Follow = player2Camera.GetComponent<SmoothFollow>();
+            player2Follow.setTarget(player2.transform);
+        }
 
         BeginGame();
     }
@@ -38,21 +55,27 @@ public class GameManager : MonoBehaviour
         {
             RestartGame();
         }
-
-        if (!enemy.activeSelf && !isRespawning)
+            
+        if (!player1.activeSelf && !player1Death.IsRespawning)
         {
-            StartCoroutine(RespawnEnemy());
-            isRespawning = true;
+            StartCoroutine(RespawnPlayer(player1));
+            player1Death.IsRespawning = true;
         }
 
-        if (player.transform.position.y <= gameFieldBoundary)
+        if (!player2.activeSelf && !player2Death.IsRespawning)
         {
-            resetPlayerPosition();
+            StartCoroutine(RespawnPlayer(player2));
+            player2Death.IsRespawning = true;
         }
 
-        if (enemy.transform.position.y <= gameFieldBoundary)
+        if (player1.transform.position.y <= gameFieldBoundary)
         {
-            resetEnemyPosition();
+            resetPlayerPosition(player1);
+        }
+
+        if (player2.transform.position.y <= gameFieldBoundary)
+        {
+            resetPlayerPosition(player2);
         }
     }
 
@@ -60,34 +83,38 @@ public class GameManager : MonoBehaviour
     {
         level.buildLevel();
 
-        resetPlayerPosition();
-        player.SetActive(true);
-
-        resetEnemyPosition();
+        resetPlayerPosition(player1);
+        resetPlayerPosition(player2);
     }
 
     private void RestartGame()
     {
         StopAllCoroutines();
+
+        GameObject[] remainsObjects = GameObject.FindGameObjectsWithTag("Remains");
+        for (int i = 0; i < remainsObjects.Length; i++)
+        {
+            Destroy(remainsObjects[i]);
+        }
+
         BeginGame();
     }
 
-    private void resetPlayerPosition()
+    private void resetPlayerPosition(GameObject player)
     {
-        player.transform.position = new Vector2(2f, 1f);        
+        player.transform.position = new Vector2(Random.Range(leftSpawnPoint,rightSpawnPoint), 1f);  
+        player.SetActive(true);
     }
 
-    private void resetEnemyPosition()
-    {
-        enemy.transform.position = new Vector2(Random.Range(1f,30f), 1f);
-        enemy.SetActive(true);
-    }
-
-    IEnumerator RespawnEnemy()
+    IEnumerator RespawnPlayer(GameObject player)
     {
         yield return new WaitForSeconds(respawnTime);
 
-        resetEnemyPosition();
-        isRespawning = false;
+        player.transform.position = new Vector2(Random.Range(leftSpawnPoint,rightSpawnPoint), 1f);
+        player.SetActive(true);
+
+        PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
+
+        playerDeath.IsRespawning = false;
     }
 }

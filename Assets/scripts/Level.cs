@@ -10,7 +10,7 @@ public class Level : MonoBehaviour
     public int width = 10;
     public int height = 3;
 
-    private float offset = 1.05f;
+    private float offset = 1.02f;
 
     public void buildLevel()
     {
@@ -25,8 +25,6 @@ public class Level : MonoBehaviour
                 tiles[i,j] = g.GetComponent<Tile>();
             }
         }
-
-        //setNeighbours();
     }
 
     private void setNeighbours()
