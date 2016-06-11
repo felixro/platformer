@@ -132,6 +132,8 @@ public class GameManager : MonoBehaviour
 
         resetPlayerPosition(player1);
         resetPlayerPosition(player2);
+
+        resetGameScore();
     }
 
     private void RestartGame()
@@ -151,6 +153,18 @@ public class GameManager : MonoBehaviour
     {
         player.transform.position = new Vector2(Random.Range(leftSpawnPoint,rightSpawnPoint), 1f);  
         player.SetActive(true);
+    }
+
+    private void resetGameScore()
+    {
+        player1Score.fontStyle = FontStyle.Normal;
+        player2Score.fontStyle = FontStyle.Normal;
+
+        player1Score.color = Color.white; 
+        player2Score.color = Color.white;
+
+        player1Score.text = "0";
+        player2Score.text = "0";
     }
 
     IEnumerator RespawnPlayer(GameObject player)
