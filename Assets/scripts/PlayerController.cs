@@ -180,7 +180,8 @@ public class PlayerController : MonoBehaviour
             body.AddForce(
                 new Vector2(
                     _controller.velocity.x * 10f, 
-                    Mathf.Sign(_controller.velocity.y) * 20f
+                    _controller.velocity.y * 10f
+                    //Mathf.Sign(_controller.velocity.y) * 20f
                 ),
                 ForceMode2D.Force
             );

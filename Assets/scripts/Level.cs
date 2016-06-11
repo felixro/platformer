@@ -10,7 +10,7 @@ public class Level : MonoBehaviour
     public int width = 10;
     public int height = 3;
 
-    private float offset = 1.02f;
+    private float offset = 1f;
 
     public void buildLevel()
     {
