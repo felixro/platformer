@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour 
 {
+    public Text player1Score;
+    public Text player2Score;
+
     public float gameFieldBoundary = -50f;
     public float respawnTime = 2f;
     public KeyboardManager keyboardManager;
@@ -60,12 +64,16 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(RespawnPlayer(player1));
             player1Death.IsRespawning = true;
+
+            increasePlayerScore(Player.TWO);
         }
 
         if (!player2.activeSelf && !player2Death.IsRespawning)
         {
             StartCoroutine(RespawnPlayer(player2));
             player2Death.IsRespawning = true;
+
+            increasePlayerScore(Player.ONE);
         }
 
         if (player1.transform.position.y <= gameFieldBoundary)
@@ -77,6 +85,45 @@ public class GameManager : MonoBehaviour
         {
             resetPlayerPosition(player2);
         }
+    }
+
+    private void increasePlayerScore(Player curPlayer)
+    {
+        int curScorePlayer1 = int.Parse(player1Score.text);
+        int curScorePlayer2 = int.Parse(player2Score.text);
+
+        int updatedScorePlayer1 = curScorePlayer1;
+        int updatedScorePlayer2 = curScorePlayer2;
+
+        if (curPlayer == Player.ONE)
+        {
+            updatedScorePlayer1 += 1;
+        }else
+        {
+            updatedScorePlayer2 += 1;
+        }
+
+        player1Score.fontStyle = FontStyle.Normal;
+        player2Score.fontStyle = FontStyle.Normal;
+
+        if (updatedScorePlayer1 > updatedScorePlayer2)
+        {
+            player1Score.color = Color.yellow; 
+            player2Score.color = Color.white;
+            player1Score.fontStyle = FontStyle.Bold;
+        }else if (updatedScorePlayer1 < updatedScorePlayer2)
+        {
+            player1Score.color = Color.white; 
+            player2Score.color = Color.yellow;  
+            player2Score.fontStyle = FontStyle.Bold;
+        }else
+        {
+            player1Score.color = Color.white; 
+            player2Score.color = Color.white;
+        }
+
+        player1Score.text = (updatedScorePlayer1).ToString();
+        player2Score.text = (updatedScorePlayer2).ToString();    
     }
 
     private void BeginGame()
@@ -116,5 +163,11 @@ public class GameManager : MonoBehaviour
         PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
 
         playerDeath.IsRespawning = false;
+    }
+
+    private enum Player
+    {
+        ONE, 
+        TWO
     }
 }
