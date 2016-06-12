@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
 
         if (curPlayer == Player.ONE)
         {
-            updatedScorePlayer1 += 1;
+            updatedScorePlayer1 += 9;
         }else
         {
             updatedScorePlayer2 += 1;
