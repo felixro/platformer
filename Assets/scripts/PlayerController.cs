@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 		_controller.onTriggerEnterEvent += onTriggerEnterEvent;
 		_controller.onTriggerExitEvent += onTriggerExitEvent;
 
-        if (name.Contains("Player"))
+        if (name.Contains("Player1"))
         {
             leftKey = keyboardManager.player1LeftKey;
             rightKey = keyboardManager.player1RightKey;
