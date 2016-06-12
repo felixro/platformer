@@ -6,6 +6,7 @@ using Prime31;
 public class PlayerController : MonoBehaviour
 {
     public KeyboardManager keyboardManager;
+    public PowerUpManager powerupManager;
 
     // keyboard config
     private KeyCode leftKey;
@@ -33,6 +34,9 @@ public class PlayerController : MonoBehaviour
     private bool _hasJumped = false;
     private bool _hasDoubleJumped = false;
 
+    private float defaultRunSpeed;
+    private float defaultJumpHeight;
+
 	void Awake()
 	{
 		_animator = GetComponent<Animator>();
@@ -58,6 +62,9 @@ public class PlayerController : MonoBehaviour
             downKey = keyboardManager.player2DownKey;
             shootKey = keyboardManager.player2ShootKey;    
         }
+
+        defaultRunSpeed = runSpeed;
+        defaultJumpHeight = jumpHeight;
 	}
 
 
@@ -67,10 +74,9 @@ public class PlayerController : MonoBehaviour
 	{
 		// bail out on plain old ground hits cause they arent very interesting
 		if( hit.normal.y == 1f )
+        {
 			return;
-
-		// logs any collider hits if uncommented. it gets noisy so it is commented out for the demo
-		//Debug.Log( "flags: " + _controller.collisionState + ", hit.normal: " + hit.normal );
+        }
 	}
 
 
@@ -195,5 +201,41 @@ public class PlayerController : MonoBehaviour
         position.z = 0f;
 
         transform.localPosition = position;
+    }
+
+    public void performPowerUpAction(PowerUpType type)
+    {
+        StartCoroutine(
+            performTemporaryPowerUpAction(
+                type
+            )
+        );
+    }
+
+    IEnumerator performTemporaryPowerUpAction(PowerUpType type)
+    {
+        switch(type)
+        {
+        case PowerUpType.JUMP_UP:
+            {
+                float updatedValue = powerupManager.jumpUp;
+                jumpHeight = updatedValue;
+
+                yield return new WaitForSeconds(powerupManager.powerupTime);
+
+                jumpHeight = defaultJumpHeight;
+            }
+            break;
+        case PowerUpType.SPEED_UP:
+            {
+                float updatedValue = powerupManager.speedUp;
+                runSpeed = updatedValue;
+
+                yield return new WaitForSeconds(powerupManager.powerupTime);
+
+                runSpeed = defaultRunSpeed;
+            }
+            break;
+        }
     }
 }
