@@ -78,11 +78,13 @@ public class GameManager : MonoBehaviour
 
         if (player1.transform.position.y <= gameFieldBoundary)
         {
+            increasePlayerScore(Player.TWO);
             resetPlayerPosition(player1);
         }
 
         if (player2.transform.position.y <= gameFieldBoundary)
         {
+            increasePlayerScore(Player.ONE);
             resetPlayerPosition(player2);
         }
     }
@@ -152,6 +154,7 @@ public class GameManager : MonoBehaviour
     private void resetPlayerPosition(GameObject player)
     {
         player.transform.position = new Vector2(Random.Range(leftSpawnPoint,rightSpawnPoint), 1f);  
+        player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         player.SetActive(true);
     }
 

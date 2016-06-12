@@ -14,50 +14,60 @@ public class CloudMover : MonoBehaviour
     public float cloudStartPosMin = 0f;
     public float cloudStartPosMax = 30f;
 
+    public float cloudSpeedMin = 0.05f;
+    public float cloudSpeedMax = 0.5f;
+
+    [Range(1, 20)]
+    public int cloudiness = 1;
+
     private GameObject[] clouds;
 
     void Start()
     {
-        clouds = new GameObject[cloudPrefabs.Length];
+        clouds = new GameObject[cloudPrefabs.Length * cloudiness];
 
         for (int i = 0; i < cloudPrefabs.Length; i++)
         {
-            GameObject cloud = 
-                Instantiate(
-                    cloudPrefabs[i], 
-                    new Vector3(
-                        Random.Range(
-                            cloudStartPosMin,
-                            cloudStartPosMax
-                        ),
-                        Random.Range(
-                            cloudHeightMin,
-                            cloudHeightMax
+            for (int j = 0; j < cloudiness; j++) 
+            {
+                GameObject cloud = 
+                    Instantiate(
+                        cloudPrefabs[i], 
+                        new Vector3(
+                            Random.Range(
+                                cloudStartPosMin,
+                                cloudStartPosMax
+                            ),
+                            Random.Range(
+                                cloudHeightMin,
+                                cloudHeightMax
+                            ), 
+                            2f
                         ), 
-                        2f
-                    ), 
-                    Quaternion.identity
-                ) as GameObject;
+                        Quaternion.identity
+                    ) as GameObject;
 
-            cloud.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(0.01f, 1f), 0f);
+                cloud.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(cloudSpeedMin, cloudSpeedMax), 0f);
+                float scaleFactor = Random.Range(1.0f, 5.0f);
+                cloud.transform.localScale = new Vector2(scaleFactor, scaleFactor);
 
-            Debug.Log(cloud);
-            clouds[i] = cloud;
+                clouds[i * j + j] = cloud;                
+            }
         }
     }
 
     void Update()
     {
-        /*
         for (int i = 0; i < clouds.Length; i++)
         {
-            Debug.Log(clouds[i]);
-            Vector3 curPosition = clouds[i].transform.position;
-            if (curPosition.x > endPositionX)
+            if (clouds[i])
             {
-                clouds[i].transform.position = new Vector3(startPositionX, curPosition.y);
+                Vector3 curPosition = clouds[i].transform.position;
+                if (curPosition.x > endPositionX)
+                {
+                    clouds[i].transform.position = new Vector3(startPositionX, curPosition.y);
+                }
             }
         }
-        */
     }
 }
