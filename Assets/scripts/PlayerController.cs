@@ -44,8 +44,6 @@ public class PlayerController : MonoBehaviour
 
 		// listen to some events for illustration purposes
 		_controller.onControllerCollidedEvent += onControllerCollider;
-		_controller.onTriggerEnterEvent += onTriggerEnterEvent;
-		_controller.onTriggerExitEvent += onTriggerExitEvent;
 
         if (name.Contains("Player1"))
         {
@@ -77,18 +75,6 @@ public class PlayerController : MonoBehaviour
         {
 			return;
         }
-	}
-
-
-	void onTriggerEnterEvent( Collider2D col )
-	{
-		Debug.Log( "onTriggerEnterEvent: " + col.gameObject.name );
-	}
-
-
-	void onTriggerExitEvent( Collider2D col )
-	{
-		Debug.Log( "onTriggerExitEvent: " + col.gameObject.name );
 	}
 
 	#endregion
