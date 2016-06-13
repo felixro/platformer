@@ -203,6 +203,12 @@ public class PlayerController : MonoBehaviour
         transform.localPosition = position;
     }
 
+    public void resetStats()
+    {
+        jumpHeight = defaultJumpHeight;
+        runSpeed = defaultRunSpeed;
+    }
+
     public void performPowerUpAction(PowerUpType type)
     {
         StartCoroutine(

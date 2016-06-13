@@ -180,6 +180,8 @@ public class GameManager : MonoBehaviour
         PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
 
         playerDeath.IsRespawning = false;
+
+        player.GetComponent<PlayerController>().resetStats();
     }
 
     private enum Player
