@@ -47,6 +47,8 @@ public class CloudMover : MonoBehaviour
                         Quaternion.identity
                     ) as GameObject;
 
+                cloud.transform.parent = transform;
+
                 cloud.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(cloudSpeedMin, cloudSpeedMax), 0f);
                 float scaleFactor = Random.Range(1.0f, 5.0f);
                 cloud.transform.localScale = new Vector2(scaleFactor, scaleFactor);

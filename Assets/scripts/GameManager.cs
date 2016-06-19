@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour 
 {
+    public PowerUpManager powerupManager;
+
+    public CanvasRenderer mainMenu;
+
     public Text player1Score;
     public Text player2Score;
 
@@ -30,8 +34,70 @@ public class GameManager : MonoBehaviour
     private float leftSpawnPoint = 1f;
     private float rightSpawnPoint = 30f;
 
-    void Start ()
+    private const string CONSTANT_OBJECTS_NAME = "ConstantObjects";
+
+    void Update ()
     {
+        if (mainMenu.gameObject.activeSelf)
+        {
+            powerupManager.gameObject.SetActive(false);
+
+            // main menu shown, do nothing else
+            return;
+        }
+
+        if (Input.GetKeyDown(keyboardManager.mainMenuKey))
+        {
+            powerupManager.gameObject.SetActive(false);
+            showMainMenu(true);
+        }
+
+        if (Input.GetKeyDown(keyboardManager.restartGameKey))
+        {
+            RestartGame();
+        }
+
+        if (player1 != null)
+        {
+            if (!player1.activeSelf && !player1Death.IsRespawning)
+            {
+                StartCoroutine(RespawnPlayer(player1));
+                player1Death.IsRespawning = true;
+
+                increasePlayerScore(Player.TWO);
+            }    
+
+            if (player1.transform.position.y <= gameFieldBoundary)
+            {
+                increasePlayerScore(Player.TWO);
+                resetPlayerPosition(player1);
+            }
+        }
+
+        if (player2 != null)
+        {
+            if (!player2.activeSelf && !player2Death.IsRespawning)
+            {
+                StartCoroutine(RespawnPlayer(player2));
+                player2Death.IsRespawning = true;
+
+                increasePlayerScore(Player.ONE);
+            }
+                
+            if (player2.transform.position.y <= gameFieldBoundary)
+            {
+                increasePlayerScore(Player.ONE);
+                resetPlayerPosition(player2);
+            }
+        }
+    }
+
+    public void BeginGame()
+    {
+        cleanupGame();
+
+        showMainMenu(false);
+
         {
             player1 = Instantiate (player1Prefab, Vector2.one, Quaternion.identity) as GameObject;
             player1Death = player1.GetComponent<PlayerDeath>();
@@ -50,43 +116,39 @@ public class GameManager : MonoBehaviour
             player2Follow.setTarget(player2.transform);
         }
 
-        BeginGame();
+        level.buildLevel();
+
+        resetPlayerPosition(player1);
+        resetPlayerPosition(player2);
+
+        resetGameScore();
+
+        powerupManager.gameObject.SetActive(true);
     }
 
-    void Update ()
+    private void cleanupGame()
     {
-        if (Input.GetKeyDown(keyboardManager.restartGameKey))
+        foreach (GameObject o in Object.FindObjectsOfType<GameObject>()) 
         {
-            RestartGame();
-        }
-            
-        if (!player1.activeSelf && !player1Death.IsRespawning)
-        {
-            StartCoroutine(RespawnPlayer(player1));
-            player1Death.IsRespawning = true;
+            if (o.transform.root.name.Contains(CONSTANT_OBJECTS_NAME))
+            {
+                continue;
+            }
 
-            increasePlayerScore(Player.TWO);
-        }
+            /*
+            if (o.transform.parent && o.transform.parent.name.Contains(CONSTANT_OBJECTS_NAME))
+            {
+                continue;
+            }
+            */
 
-        if (!player2.activeSelf && !player2Death.IsRespawning)
-        {
-            StartCoroutine(RespawnPlayer(player2));
-            player2Death.IsRespawning = true;
-
-            increasePlayerScore(Player.ONE);
+            Destroy(o);
         }
+    }
 
-        if (player1.transform.position.y <= gameFieldBoundary)
-        {
-            increasePlayerScore(Player.TWO);
-            resetPlayerPosition(player1);
-        }
-
-        if (player2.transform.position.y <= gameFieldBoundary)
-        {
-            increasePlayerScore(Player.ONE);
-            resetPlayerPosition(player2);
-        }
+    private void showMainMenu(bool isShown)
+    {
+        mainMenu.gameObject.SetActive(isShown);
     }
 
     private void increasePlayerScore(Player curPlayer)
@@ -126,16 +188,6 @@ public class GameManager : MonoBehaviour
 
         player1Score.text = (updatedScorePlayer1).ToString();
         player2Score.text = (updatedScorePlayer2).ToString();    
-    }
-
-    private void BeginGame()
-    {
-        level.buildLevel();
-
-        resetPlayerPosition(player1);
-        resetPlayerPosition(player2);
-
-        resetGameScore();
     }
 
     private void RestartGame()

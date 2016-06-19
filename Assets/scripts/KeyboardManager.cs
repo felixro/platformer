@@ -16,4 +16,6 @@ public class KeyboardManager : MonoBehaviour
     public KeyCode player2JumpKey = KeyCode.W;
     public KeyCode player2DownKey = KeyCode.S;
     public KeyCode player2ShootKey = KeyCode.Q;
+
+    public KeyCode mainMenuKey = KeyCode.Escape;
 }
