@@ -20,9 +20,11 @@ public class PowerUpManager : MonoBehaviour
 
     public int maxPowerUps = 5;
 
+    public bool shouldSpawnPowerups = false;
+
     void FixedUpdate()
     {
-        if (GameObject.FindGameObjectsWithTag ("PowerUp").Length < maxPowerUps)
+        if (shouldSpawnPowerups && GameObject.FindGameObjectsWithTag ("PowerUp").Length < maxPowerUps)
         {
             spawnPowerUp();
         }
@@ -30,13 +32,14 @@ public class PowerUpManager : MonoBehaviour
 
     private void spawnPowerUp()
     {
-        Instantiate (
-            powerupPrefabs[Random.Range(0, powerupPrefabs.Length)], 
-            new Vector2(
-                Random.Range(powerUpSpawnLeft, powerUpSpawnRight), 
-                powerUpSpawnHeight
-            ), 
-            Quaternion.identity
-        );
+        GameObject cloud = 
+            Instantiate (
+                powerupPrefabs[Random.Range(0, powerupPrefabs.Length)], 
+                new Vector2(
+                    Random.Range(powerUpSpawnLeft, powerUpSpawnRight), 
+                    powerUpSpawnHeight
+                ), 
+                Quaternion.identity
+            ) as GameObject;
     }
 }

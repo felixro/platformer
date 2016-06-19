@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     public CanvasRenderer mainMenu;
 
+    public Text newGameText;
     public Text player1Score;
     public Text player2Score;
 
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     public float respawnTime = 2f;
     public KeyboardManager keyboardManager;
 
+    public Camera mainMenuCamera;
     public Camera player1CameraPrefab;
     public Camera player2CameraPrefab;
 
@@ -36,20 +38,31 @@ public class GameManager : MonoBehaviour
 
     private const string CONSTANT_OBJECTS_NAME = "ConstantObjects";
 
+    private bool isGameStarted = false;
+    private bool isMainMenuShown = false;
+
     void Update ()
     {
-        if (mainMenu.gameObject.activeSelf)
-        {
-            powerupManager.gameObject.SetActive(false);
-
-            // main menu shown, do nothing else
-            return;
-        }
-
         if (Input.GetKeyDown(keyboardManager.mainMenuKey))
         {
-            powerupManager.gameObject.SetActive(false);
-            showMainMenu(true);
+            if (isMainMenuShown)
+            {
+                showMainMenu(false);
+            }else
+            {
+                if (isGameStarted)
+                {
+                    newGameText.text = "Restart Game";
+                }
+
+                showMainMenu(true);
+            }
+        }
+
+        if (mainMenu.gameObject.activeSelf)
+        {
+            isMainMenuShown = true;
+            powerupManager.shouldSpawnPowerups = false;
         }
 
         if (Input.GetKeyDown(keyboardManager.restartGameKey))
@@ -94,6 +107,8 @@ public class GameManager : MonoBehaviour
 
     public void BeginGame()
     {
+        isGameStarted = true;
+
         cleanupGame();
 
         showMainMenu(false);
@@ -123,7 +138,12 @@ public class GameManager : MonoBehaviour
 
         resetGameScore();
 
-        powerupManager.gameObject.SetActive(true);
+        powerupManager.shouldSpawnPowerups = true;
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
     private void cleanupGame()
@@ -135,19 +155,14 @@ public class GameManager : MonoBehaviour
                 continue;
             }
 
-            /*
-            if (o.transform.parent && o.transform.parent.name.Contains(CONSTANT_OBJECTS_NAME))
-            {
-                continue;
-            }
-            */
-
             Destroy(o);
         }
     }
 
     private void showMainMenu(bool isShown)
     {
+        isMainMenuShown = isShown;
+        mainMenuCamera.gameObject.SetActive(isShown);
         mainMenu.gameObject.SetActive(isShown);
     }
 
