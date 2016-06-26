@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public PowerUpManager powerupManager;
 
+    public CanvasRenderer scoreboard;
     public CanvasRenderer mainMenu;
 
     public Text newGameText;
@@ -40,6 +41,11 @@ public class GameManager : MonoBehaviour
 
     private bool isGameStarted = false;
     private bool isMainMenuShown = false;
+
+    void Awake ()
+    {
+        scoreboard.gameObject.SetActive(false);
+    }
 
     void Update ()
     {
@@ -141,11 +147,6 @@ public class GameManager : MonoBehaviour
         powerupManager.shouldSpawnPowerups = true;
     }
 
-    public void ExitGame()
-    {
-        Application.Quit();
-    }
-
     private void cleanupGame()
     {
         foreach (GameObject o in Object.FindObjectsOfType<GameObject>()) 
@@ -162,6 +163,8 @@ public class GameManager : MonoBehaviour
     private void showMainMenu(bool isShown)
     {
         isMainMenuShown = isShown;
+
+        scoreboard.gameObject.SetActive(!isShown);
         mainMenuCamera.gameObject.SetActive(isShown);
         mainMenu.gameObject.SetActive(isShown);
     }

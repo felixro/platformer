@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour
 	private Animator _animator;
 	private RaycastHit2D _lastControllerColliderHit;
 	private Vector3 _velocity;
-    private bool _hasJumped = false;
     private bool _hasDoubleJumped = false;
 
     private float defaultRunSpeed;

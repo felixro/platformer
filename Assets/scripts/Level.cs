@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class Level : MonoBehaviour 
 {
@@ -12,7 +15,39 @@ public class Level : MonoBehaviour
 
     private float offset = 0.5f;
 
+    public static string STORED_LEVEL_FILENAME = "levelData.dat";
+
     public void buildLevel()
+    {
+        if (File.Exists(Application.persistentDataPath + STORED_LEVEL_FILENAME))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = File.Open(Application.persistentDataPath + STORED_LEVEL_FILENAME, FileMode.Open);
+
+            StoredLevel storedLevel = (StoredLevel) bf.Deserialize(fs);
+
+            fs.Close();
+
+            buildLevel(storedLevel._bitmap);
+        }else
+        {
+            bool[,] bitmap = new bool[width,height];
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++) 
+                {
+                    bitmap[i,j] = true;
+                }
+            }
+
+            buildLevel(bitmap);
+        }
+
+
+    }
+
+    public void buildLevel(bool[,] bitmap)
     {
         tiles = new Tile[width, height];
 
@@ -23,8 +58,24 @@ public class Level : MonoBehaviour
                 GameObject g = Instantiate (tilePrefab, new Vector2(i * offset, -j * offset), Quaternion.identity) as GameObject;
 
                 tiles[i,j] = g.GetComponent<Tile>();
+                tiles[i,j].gameObject.SetActive(bitmap[i,j]);
             }
         }
+    }
+
+    public bool[,] GetBitmap()
+    {
+        bool[,] bitmap = new bool[width, height];
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++) 
+            {
+                bitmap[i,j] = tiles[i,j].isActiveAndEnabled;
+            }
+        }
+
+        return bitmap;
     }
 
     private void setNeighbours()
