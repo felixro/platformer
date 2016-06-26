@@ -6,6 +6,7 @@ using System.IO;
 
 public class LevelBuilder : MonoBehaviour 
 {
+    public MouseManager mouseManager;
     public KeyboardManager keyboardManager;
     public Level level;
 
@@ -14,7 +15,7 @@ public class LevelBuilder : MonoBehaviour
 
 	void Start () 
     {
-        level.buildLevel();
+        level.buildLevel(true);
 	}
 	
 	// Update is called once per frame
@@ -29,6 +30,8 @@ public class LevelBuilder : MonoBehaviour
         
         Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hit = Physics2D.CircleCastAll(worldPoint, colliderRadius, Vector2.zero);
+
+        mouseManager.setCircleSize(colliderRadius);
 
         for (int i = 0; i < hit.Length; i++)
         {
@@ -54,6 +57,11 @@ public class LevelBuilder : MonoBehaviour
 
         bf.Serialize(fs, storedLevel);
         fs.Close();
+    }
+
+    public void ResetLevel()
+    {
+        level.buildLevel(false);
     }
 }
 

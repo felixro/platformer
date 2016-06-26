@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
             player2Follow.setTarget(player2.transform);
         }
 
-        level.buildLevel();
+        level.buildLevel(true);
 
         resetPlayerPosition(player1);
         resetPlayerPosition(player2);

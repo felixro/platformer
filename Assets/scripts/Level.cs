@@ -17,9 +17,9 @@ public class Level : MonoBehaviour
 
     public static string STORED_LEVEL_FILENAME = "levelData.dat";
 
-    public void buildLevel()
+    public void buildLevel(bool loadFromFile)
     {
-        if (File.Exists(Application.persistentDataPath + STORED_LEVEL_FILENAME))
+        if (loadFromFile && File.Exists(Application.persistentDataPath + STORED_LEVEL_FILENAME))
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fs = File.Open(Application.persistentDataPath + STORED_LEVEL_FILENAME, FileMode.Open);
@@ -49,6 +49,8 @@ public class Level : MonoBehaviour
 
     public void buildLevel(bool[,] bitmap)
     {
+        cleanTiles();
+
         tiles = new Tile[width, height];
 
         for (int i = 0; i< width; i++)
@@ -76,6 +78,22 @@ public class Level : MonoBehaviour
         }
 
         return bitmap;
+    }
+
+    private void cleanTiles()
+    {
+        if (tiles == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i< width; i++)
+        {
+            for (int j = 0; j < height; j++) 
+            {
+                Destroy(tiles[i,j].gameObject);
+            }
+        }
     }
 
     private void setNeighbours()
