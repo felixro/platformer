@@ -31,19 +31,18 @@ public class MouseManager : MonoBehaviour
 
     private void drawCircleAroundMousePosition()
     {
-        DrawCircle(mousePosition.x, mousePosition.y, _size, _size, 1f);
+        DrawCircle(mousePosition.x, mousePosition.y, _size);
     }
 
-    private void DrawCircle(float xa, float ya, float xradius, float yradius, float angle) 
+    private void DrawCircle(float xa, float ya, float radius) 
     {
         float x,y;
-
-        Debug.Log(xa + "/" + ya);
+        float angle = 0f;
 
         for (int i = 0; i < (segments + 1); i++)
         {
-            x = Mathf.Sin (Mathf.Deg2Rad * angle) * xradius + xa;
-            y = Mathf.Cos (Mathf.Deg2Rad * angle) * yradius + ya;
+            x = Mathf.Sin (Mathf.Deg2Rad * angle) * radius + xa;
+            y = Mathf.Cos (Mathf.Deg2Rad * angle) * radius + ya;
 
             line.SetPosition (i, new Vector3(x,y,0f));
 
