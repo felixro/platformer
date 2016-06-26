@@ -7,9 +7,7 @@ public class GameManager : MonoBehaviour
     public PowerUpManager powerupManager;
 
     public CanvasRenderer scoreboard;
-    public CanvasRenderer mainMenu;
 
-    public Text newGameText;
     public Text player1Score;
     public Text player2Score;
 
@@ -17,7 +15,6 @@ public class GameManager : MonoBehaviour
     public float respawnTime = 2f;
     public KeyboardManager keyboardManager;
 
-    public Camera mainMenuCamera;
     public Camera player1CameraPrefab;
     public Camera player2CameraPrefab;
 
@@ -39,38 +36,13 @@ public class GameManager : MonoBehaviour
 
     private const string CONSTANT_OBJECTS_NAME = "ConstantObjects";
 
-    private bool isGameStarted = false;
-    private bool isMainMenuShown = false;
-
-    void Awake ()
+    void Start()
     {
-        scoreboard.gameObject.SetActive(false);
+        BeginGame();
     }
 
     void Update ()
     {
-        if (Input.GetKeyDown(keyboardManager.mainMenuKey))
-        {
-            if (isMainMenuShown)
-            {
-                showMainMenu(false);
-            }else
-            {
-                if (isGameStarted)
-                {
-                    newGameText.text = "Restart Game";
-                }
-
-                showMainMenu(true);
-            }
-        }
-
-        if (mainMenu.gameObject.activeSelf)
-        {
-            isMainMenuShown = true;
-            powerupManager.shouldSpawnPowerups = false;
-        }
-
         if (Input.GetKeyDown(keyboardManager.restartGameKey))
         {
             RestartGame();
@@ -113,11 +85,7 @@ public class GameManager : MonoBehaviour
 
     public void BeginGame()
     {
-        isGameStarted = true;
-
         cleanupGame();
-
-        showMainMenu(false);
 
         {
             player1 = Instantiate (player1Prefab, Vector2.one, Quaternion.identity) as GameObject;
@@ -158,15 +126,6 @@ public class GameManager : MonoBehaviour
 
             Destroy(o);
         }
-    }
-
-    private void showMainMenu(bool isShown)
-    {
-        isMainMenuShown = isShown;
-
-        scoreboard.gameObject.SetActive(!isShown);
-        mainMenuCamera.gameObject.SetActive(isShown);
-        mainMenu.gameObject.SetActive(isShown);
     }
 
     private void increasePlayerScore(Player curPlayer)

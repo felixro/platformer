@@ -18,4 +18,15 @@ public class KeyboardManager : MonoBehaviour
     public KeyCode player2ShootKey = KeyCode.Q;
 
     public KeyCode mainMenuKey = KeyCode.Escape;
+
+
+    void Update()
+    {
+        if (Input.GetKeyDown(mainMenuKey))
+        {
+            SceneLoader.LoadScene(SceneLoader.MAIN_MENU);
+
+            return;
+        }
+    }
 }

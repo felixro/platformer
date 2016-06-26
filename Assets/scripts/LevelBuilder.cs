@@ -6,9 +6,11 @@ using System.IO;
 
 public class LevelBuilder : MonoBehaviour 
 {
+    public KeyboardManager keyboardManager;
     public Level level;
 
     private float colliderRadius = 1f;
+    private bool isMainMenuShown = false;
 
 	void Start () 
     {
@@ -18,6 +20,13 @@ public class LevelBuilder : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
+        if (Input.GetKeyDown(keyboardManager.mainMenuKey))
+        {
+            isMainMenuShown = !isMainMenuShown;
+
+            return;
+        }
+        
         Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hit = Physics2D.CircleCastAll(worldPoint, colliderRadius, Vector2.zero);
 
