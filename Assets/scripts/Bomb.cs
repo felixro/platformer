@@ -71,6 +71,9 @@ public class Bomb : MonoBehaviour
         circleCollider.isTrigger = true;
         circleCollider.radius = explosionRadius;
 
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.Play();
+
         ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
         for (int i = 0; i < particleSystems.Length; i++)
         {

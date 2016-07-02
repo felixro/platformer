@@ -36,10 +36,14 @@ public class PlayerController : MonoBehaviour
     private float defaultRunSpeed;
     private float defaultJumpHeight;
 
+    private AudioSource jumpSound;
+
 	void Awake()
 	{
 		_animator = GetComponent<Animator>();
 		_controller = GetComponent<CharacterController2D>();
+
+        jumpSound = GetComponent<AudioSource>();
 
 		// listen to some events for illustration purposes
 		_controller.onControllerCollidedEvent += onControllerCollider;
@@ -126,6 +130,8 @@ public class PlayerController : MonoBehaviour
         // allow double jumping
 		if( !_hasDoubleJumped && Input.GetKeyDown( jumpKey ) )
 		{
+            jumpSound.Play();
+
             if (!_controller.isGrounded)
             {
                 _hasDoubleJumped = true;
