@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
 
     public GameObject bombPrefab;
 
+    public AudioClip jumpAudio;
+    public AudioClip pickupAudio;
+
 	[HideInInspector]
 	private float normalizedHorizontalSpeed = 0;
 
@@ -36,14 +39,14 @@ public class PlayerController : MonoBehaviour
     private float defaultRunSpeed;
     private float defaultJumpHeight;
 
-    private AudioSource jumpSound;
+    private AudioSource audioSource;
 
 	void Awake()
 	{
 		_animator = GetComponent<Animator>();
 		_controller = GetComponent<CharacterController2D>();
 
-        jumpSound = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
 
 		// listen to some events for illustration purposes
 		_controller.onControllerCollidedEvent += onControllerCollider;
@@ -66,8 +69,9 @@ public class PlayerController : MonoBehaviour
 
         defaultRunSpeed = runSpeed;
         defaultJumpHeight = jumpHeight;
-	}
 
+        audioSource = GetComponent<AudioSource>();
+	}
 
 	#region Event Listeners
 
@@ -130,7 +134,8 @@ public class PlayerController : MonoBehaviour
         // allow double jumping
 		if( !_hasDoubleJumped && Input.GetKeyDown( jumpKey ) )
 		{
-            jumpSound.Play();
+            audioSource.clip = jumpAudio;
+            audioSource.Play();
 
             if (!_controller.isGrounded)
             {
@@ -184,6 +189,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public int getMovementDirection()
+    {
+        Vector3 localVelocity = transform.InverseTransformVector(_velocity);
+
+        if (localVelocity.x <= -.5f)
+        {
+            return -1;
+        }else if (localVelocity.x >= 0.5f)
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
     public void resetPosition()
     {
         Vector3 position;
@@ -202,6 +222,9 @@ public class PlayerController : MonoBehaviour
 
     public void performPowerUpAction(PowerUpType type)
     {
+        audioSource.clip = pickupAudio;
+        audioSource.Play();
+
         StartCoroutine(
             performTemporaryPowerUpAction(
                 type
