@@ -6,10 +6,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{100AE41E-9853-00A1-0814-C759729749EB}</ProjectGuid>
+    <ProjectGuid>{BCFC5CD0-6A57-D3FC-62E6-5F2C401A0DB7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>Assets</BaseDirectory>
@@ -45,30 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\AudioHandler.cs" />
-     <Compile Include="Assets\Bottom.cs" />
-     <Compile Include="Assets\FlagHandler.cs" />
-     <Compile Include="Assets\scripts\Bomb.cs" />
-     <Compile Include="Assets\scripts\CharacterController2D.cs" />
-     <Compile Include="Assets\scripts\CloudMover.cs" />
-     <Compile Include="Assets\scripts\DeadPiece.cs" />
-     <Compile Include="Assets\scripts\GameManager.cs" />
-     <Compile Include="Assets\scripts\GeneratePieces.cs" />
-     <Compile Include="Assets\scripts\KeyboardManager.cs" />
-     <Compile Include="Assets\scripts\Level.cs" />
-     <Compile Include="Assets\scripts\PlayerController.cs" />
-     <Compile Include="Assets\scripts\PlayerDeath.cs" />
-     <Compile Include="Assets\scripts\PowerUpManager.cs" />
-     <Compile Include="Assets\scripts\PowerUpType.cs" />
-     <Compile Include="Assets\scripts\Powerup.cs" />
-     <Compile Include="Assets\scripts\SceneLoader.cs" />
-     <Compile Include="Assets\scripts\SmoothFollow.cs" />
-     <Compile Include="Assets\scripts\Tile.cs" />
-     <Compile Include="Assets\scripts\TileDirection.cs" />
-     <Compile Include="Assets\scripts\levelBuilder\CameraMover.cs" />
-     <Compile Include="Assets\scripts\levelBuilder\DragPiece2D.cs" />
-     <Compile Include="Assets\scripts\levelBuilder\LevelBuilder.cs" />
-     <Compile Include="Assets\scripts\levelBuilder\MouseManager.cs" />
+     <Compile Include="Assets\Standard Assets\Utility\DragRigidbody.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

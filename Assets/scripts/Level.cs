@@ -11,6 +11,10 @@ public class Level : MonoBehaviour
     public GameObject tileTopPrefab;
     public GameObject tileBottomPrefab;
 
+    public GameObject redFlag;
+    public GameObject player1Base;
+    public GameObject player2Base;
+
     private Tile[,,] tiles;
 
     public int width = 10;
@@ -18,7 +22,7 @@ public class Level : MonoBehaviour
 
     private float offset = 1f;
 
-    public static string STORED_LEVEL_FILENAME = "level.v1.dat";
+    public static string STORED_LEVEL_FILENAME = "level.v3.dat";
 
     public void buildLevel(bool loadFromFile)
     {
@@ -28,6 +32,24 @@ public class Level : MonoBehaviour
             FileStream fs = File.Open(Application.persistentDataPath + STORED_LEVEL_FILENAME, FileMode.Open);
 
             StoredLevel storedLevel = (StoredLevel) bf.Deserialize(fs);
+
+            redFlag.transform.localPosition = 
+                new Vector2(
+                    storedLevel._flagPosition._x, 
+                    storedLevel._flagPosition._y
+                );
+                    
+            player1Base.transform.localPosition = 
+                new Vector2(
+                    storedLevel._basePlayer1Position._x, 
+                    storedLevel._basePlayer1Position._y
+                );
+
+            player2Base.transform.localPosition = 
+                new Vector2(
+                    storedLevel._basePlayer2Position._x, 
+                    storedLevel._basePlayer2Position._y
+                );
 
             fs.Close();
 

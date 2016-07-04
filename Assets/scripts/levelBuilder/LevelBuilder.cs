@@ -10,8 +10,15 @@ public class LevelBuilder : MonoBehaviour
     public KeyboardManager keyboardManager;
     public Level level;
 
+    public Rigidbody2D flag;
+    public Rigidbody2D basePlayer1;
+    public Rigidbody2D basePlayer2;
+
     private float colliderRadius = 1f;
     private bool isMainMenuShown = false;
+
+    private bool destroyTerrain = true;
+    private bool moveFlag = false;
 
 	void Start () 
     {
@@ -27,21 +34,41 @@ public class LevelBuilder : MonoBehaviour
 
             return;
         }
-        
-        Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D[] hit = Physics2D.CircleCastAll(worldPoint, colliderRadius, Vector2.zero);
 
-        mouseManager.setCircleSize(colliderRadius);
-
-        for (int i = 0; i < hit.Length; i++)
+        if (destroyTerrain)
         {
-            RaycastHit2D curHit = hit[i];
-            if ( curHit.collider != null && Input.GetMouseButton(0) )
+            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D[] hit = Physics2D.CircleCastAll(worldPoint, colliderRadius, Vector2.zero);
+
+            mouseManager.setCircleSize(colliderRadius);
+
+            for (int i = 0; i < hit.Length; i++)
             {
-                curHit.collider.gameObject.SetActive(false);
-            }    
+                RaycastHit2D curHit = hit[i];
+                if ( curHit.collider != null 
+                        && curHit.collider.gameObject.layer == LayerMask.NameToLayer("Ground")
+                        && Input.GetMouseButton(0) )
+                {
+                    curHit.collider.gameObject.SetActive(false);
+                }    
+            }
+        }else if (moveFlag)
+        {
+            mouseManager.setCircleSize(0.1f);
         }
 	}
+        
+    public void DestroyTerrain()
+    {
+        destroyTerrain = true;
+        moveFlag = false;
+    }
+
+    public void MoveFlag()
+    {
+        destroyTerrain = false;
+        moveFlag = true;
+    }
 
     public void SetRadiusSize(float size)
     {
@@ -53,7 +80,13 @@ public class LevelBuilder : MonoBehaviour
         BinaryFormatter bf = new BinaryFormatter();
         FileStream fs = File.Create(Application.persistentDataPath + Level.STORED_LEVEL_FILENAME);
 
-        StoredLevel storedLevel = new StoredLevel(level.GetBitmap());
+        StoredLevel storedLevel = 
+            new StoredLevel(
+                level.GetBitmap(), 
+                flag.transform.localPosition,
+                basePlayer1.transform.localPosition,
+                basePlayer2.transform.localPosition
+            );
 
         bf.Serialize(fs, storedLevel);
         fs.Close();
@@ -62,6 +95,9 @@ public class LevelBuilder : MonoBehaviour
     public void ResetLevel()
     {
         level.buildLevel(false);
+        flag.transform.position = new Vector3(10f, 10f, 0f);
+        basePlayer1.transform.position = new Vector3(15f, 10f, 0f);
+        basePlayer2.transform.position = new Vector3(22f, 10f, 0f);
     }
 }
 
@@ -69,9 +105,32 @@ public class LevelBuilder : MonoBehaviour
 class StoredLevel
 {
     public bool[,,] _bitmap;
+    public Position _flagPosition;
+    public Position _basePlayer1Position;
+    public Position _basePlayer2Position;
 
-    public StoredLevel(bool[,,] bitmap)
+    public StoredLevel(
+        bool[,,] bitmap, 
+        Vector3 flagPosition,
+        Vector3 basePlayer1Position,
+        Vector3 basePlayer2Position
+    )
     {
         _bitmap = bitmap;
+        _flagPosition = new Position(flagPosition.x, flagPosition.y);
+        _basePlayer1Position = new Position(basePlayer1Position.x, basePlayer1Position.y);
+        _basePlayer2Position = new Position(basePlayer2Position.x, basePlayer2Position.y);
+    }
+}
+
+[Serializable]
+class Position
+{
+    public float _x, _y;
+
+    public Position(float x, float y)
+    {
+        _x = x;
+        _y = y;
     }
 }
