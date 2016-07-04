@@ -42,7 +42,7 @@ public class CloudMover : MonoBehaviour
                                 cloudHeightMin,
                                 cloudHeightMax
                             ), 
-                            2f
+                            5f
                         ), 
                         Quaternion.identity
                     ) as GameObject;

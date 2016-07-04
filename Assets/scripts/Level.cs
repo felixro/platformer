@@ -6,16 +6,19 @@ using System.IO;
 
 public class Level : MonoBehaviour 
 {
-    public GameObject tilePrefab;
+    public GameObject tileLeftPrefab;
+    public GameObject tileRightPrefab;
+    public GameObject tileTopPrefab;
+    public GameObject tileBottomPrefab;
 
-    private Tile[,] tiles;
+    private Tile[,,] tiles;
 
     public int width = 10;
     public int height = 3;
 
-    private float offset = 0.5f;
+    private float offset = 1f;
 
-    public static string STORED_LEVEL_FILENAME = "levelData.dat";
+    public static string STORED_LEVEL_FILENAME = "level.v1.dat";
 
     public void buildLevel(bool loadFromFile)
     {
@@ -31,49 +34,63 @@ public class Level : MonoBehaviour
             buildLevel(storedLevel._bitmap);
         }else
         {
-            bool[,] bitmap = new bool[width,height];
+            bool[,,] bitmap = new bool[width,height,4];
 
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++) 
                 {
-                    bitmap[i,j] = true;
+                    for (int k = 0; k < 4; k++) 
+                    {
+                        bitmap[i,j,k] = true;
+                    }
                 }
             }
 
             buildLevel(bitmap);
         }
-
-
     }
 
-    public void buildLevel(bool[,] bitmap)
+    public void buildLevel(bool[,,] bitmap)
     {
         cleanTiles();
 
-        tiles = new Tile[width, height];
+        tiles = new Tile[width, height, 4];
 
         for (int i = 0; i< width; i++)
         {
             for (int j = 0; j < height; j++) 
             {
-                GameObject g = Instantiate (tilePrefab, new Vector2(i * offset, -j * offset), Quaternion.identity) as GameObject;
+                GameObject leftTile = Instantiate (tileLeftPrefab, new Vector2(i * offset, -j * offset), Quaternion.identity) as GameObject;
+                GameObject rightTile = Instantiate (tileRightPrefab, new Vector2(i * offset, -j * offset), Quaternion.identity) as GameObject;
+                GameObject topTile = Instantiate (tileTopPrefab, new Vector2(i * offset, -j * offset), Quaternion.identity) as GameObject;
+                GameObject bottomTile = Instantiate (tileBottomPrefab, new Vector2(i * offset, -j * offset), Quaternion.identity) as GameObject;
 
-                tiles[i,j] = g.GetComponent<Tile>();
-                tiles[i,j].gameObject.SetActive(bitmap[i,j]);
+                tiles[i,j,0] = leftTile.GetComponent<Tile>();
+                tiles[i,j,1] = rightTile.GetComponent<Tile>();
+                tiles[i,j,2] = topTile.GetComponent<Tile>();
+                tiles[i,j,3] = bottomTile.GetComponent<Tile>();
+
+                for (int k = 0; k < 4; k++) 
+                {
+                    tiles[i,j,k].gameObject.SetActive(bitmap[i,j,k]);
+                }
             }
         }
     }
 
-    public bool[,] GetBitmap()
+    public bool[,,] GetBitmap()
     {
-        bool[,] bitmap = new bool[width, height];
+        bool[,,] bitmap = new bool[width, height, 4];
 
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++) 
             {
-                bitmap[i,j] = tiles[i,j].isActiveAndEnabled;
+                for (int k = 0; k < 4; k++) 
+                {
+                    bitmap[i, j, k] = tiles[i, j, k].isActiveAndEnabled;    
+                }
             }
         }
 
@@ -91,57 +108,9 @@ public class Level : MonoBehaviour
         {
             for (int j = 0; j < height; j++) 
             {
-                Destroy(tiles[i,j].gameObject);
-            }
-        }
-    }
-
-    private void setNeighbours()
-    {
-        for (int i = 0; i< width; i++)
-        {
-            for (int j = 0; j < height; j++) 
-            {
-                Tile tile = tiles[i,j];
-
-                if (i > 0)
+                for (int k = 0; k < 4; k++) 
                 {
-                    tile.setNeighbour(TileDirection.W, tiles[i-1,j]);
-
-                    if (j > 0)
-                    {
-                        tile.setNeighbour(TileDirection.NW, tiles[i-1,j-1]);
-                    }
-
-                    if (j < height - 1)
-                    {
-                        tile.setNeighbour(TileDirection.SW, tiles[i-1,j+1]);
-                    }
-                }
-
-                if (i < width - 1)
-                {
-                    tile.setNeighbour(TileDirection.E, tiles[i+1,j]);
-
-                    if (j < height - 1)
-                    {
-                        tile.setNeighbour(TileDirection.SE, tiles[i+1,j+1]);
-                    }
-                }
-
-                if (j > 0)
-                {
-                    tile.setNeighbour(TileDirection.N, tiles[i,j-1]);
-
-                    if (i < width - 1)
-                    {
-                        tile.setNeighbour(TileDirection.NE, tiles[i+1,j-1]);
-                    }
-                }
-
-                if (j < height - 1)
-                {
-                    tile.setNeighbour(TileDirection.S, tiles[i,j+1]);
+                    Destroy(tiles[i,j,k].gameObject);
                 }
             }
         }

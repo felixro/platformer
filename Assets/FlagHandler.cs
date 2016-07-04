@@ -16,11 +16,11 @@ public class FlagHandler : MonoBehaviour
 
             if (movementDirection == 1)
             {
-                localPosition = new Vector3(-5f, 2f, 1f);
+                localPosition = new Vector3(-5f, 2f, 2f);
                 localRotation = Quaternion.Euler(0f, 180f, -45f);
             }else if (movementDirection == -1)
             {
-                localPosition = new Vector3(5f, 2f, 1f);
+                localPosition = new Vector3(5f, 2f, 2f);
                 localRotation = Quaternion.Euler(0f, 0f, -45f);
             }
         }

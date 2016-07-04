@@ -68,9 +68,9 @@ public class LevelBuilder : MonoBehaviour
 [Serializable]
 class StoredLevel
 {
-    public bool[,] _bitmap;
+    public bool[,,] _bitmap;
 
-    public StoredLevel(bool[,] bitmap)
+    public StoredLevel(bool[,,] bitmap)
     {
         _bitmap = bitmap;
     }
