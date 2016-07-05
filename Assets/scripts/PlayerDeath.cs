@@ -24,6 +24,14 @@ public class PlayerDeath : MonoBehaviour
 
     public void die()
     {
+        // if the player held the flag, drop it
+        FlagHandler flagHandler = GetComponentInChildren<FlagHandler>();
+
+        if (flagHandler != null)
+        {
+            flagHandler.dropFlag();
+        }
+
         this.gameObject.SetActive(false);
         isRespawning = false;
 

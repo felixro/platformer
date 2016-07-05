@@ -8,6 +8,8 @@ public class FlagHandler : MonoBehaviour
     private Vector3 localPosition;
     private Quaternion localRotation;
 
+    private Vector3 defaultPosition;
+
     void Update()
     {
         if (flagHolder != null)
@@ -39,5 +41,26 @@ public class FlagHandler : MonoBehaviour
         {
             flagHolder = other.gameObject;
         }
+    }
+
+    public void setDefaultPosition(Vector2 position)
+    {
+        defaultPosition = new Vector3(position.x, position.y, 2f);
+        transform.localPosition = position;
+    }
+
+    public void dropFlag()
+    {
+        flagHolder = null;
+        transform.parent = null;        
+    }
+
+    public void resetPosition()
+    {
+        flagHolder = null;
+        transform.parent = null;
+
+        transform.position = defaultPosition;
+        transform.rotation = Quaternion.identity;
     }
 }

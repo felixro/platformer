@@ -55,12 +55,12 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(RespawnPlayer(player1));
                 player1Death.IsRespawning = true;
 
-                increasePlayerScore(Player.TWO);
+                increasePlayerScore(Player.TWO, 1);
             }    
 
             if (player1.transform.position.y <= gameFieldBoundary)
             {
-                increasePlayerScore(Player.TWO);
+                increasePlayerScore(Player.TWO, 1);
                 resetPlayerPosition(player1);
             }
         }
@@ -72,12 +72,12 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(RespawnPlayer(player2));
                 player2Death.IsRespawning = true;
 
-                increasePlayerScore(Player.ONE);
+                increasePlayerScore(Player.ONE, 1);
             }
                 
             if (player2.transform.position.y <= gameFieldBoundary)
             {
-                increasePlayerScore(Player.ONE);
+                increasePlayerScore(Player.ONE, 1);
                 resetPlayerPosition(player2);
             }
         }
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void increasePlayerScore(Player curPlayer)
+    public void increasePlayerScore(Player curPlayer, int scorePoints)
     {
         int curScorePlayer1 = int.Parse(player1Score.text);
         int curScorePlayer2 = int.Parse(player2Score.text);
@@ -138,10 +138,10 @@ public class GameManager : MonoBehaviour
 
         if (curPlayer == Player.ONE)
         {
-            updatedScorePlayer1 += 1;
+            updatedScorePlayer1 += scorePoints;
         }else
         {
-            updatedScorePlayer2 += 1;
+            updatedScorePlayer2 += scorePoints;
         }
 
         player1Score.fontStyle = FontStyle.Normal;
@@ -211,11 +211,5 @@ public class GameManager : MonoBehaviour
         playerDeath.IsRespawning = false;
 
         player.GetComponent<PlayerController>().resetStats();
-    }
-
-    private enum Player
-    {
-        ONE, 
-        TWO
     }
 }

@@ -33,11 +33,14 @@ public class Level : MonoBehaviour
 
             StoredLevel storedLevel = (StoredLevel) bf.Deserialize(fs);
 
-            redFlag.transform.localPosition = 
+            FlagHandler flagHandler = redFlag.GetComponent<FlagHandler>();
+
+            flagHandler.setDefaultPosition(
                 new Vector2(
                     storedLevel._flagPosition._x, 
                     storedLevel._flagPosition._y
-                );
+                )
+            );
                     
             player1Base.transform.localPosition = 
                 new Vector2(
