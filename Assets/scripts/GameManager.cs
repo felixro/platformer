@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
 
     public GameObject player1Prefab;
     public GameObject player2Prefab;
+
+    public Transform player1Base;
+    public Transform player2Base;
+
     public Level level;
 
     private GameObject player1;
@@ -182,7 +186,13 @@ public class GameManager : MonoBehaviour
 
     private void resetPlayerPosition(GameObject player)
     {
-        player.transform.position = new Vector2(Random.Range(leftSpawnPoint,rightSpawnPoint), 1f);  
+        if (player.CompareTag("Player1"))
+        {
+            player.transform.position = player1Base.transform.position;
+        }else if (player.CompareTag("Player2"))
+        {
+            player.transform.position = player2Base.transform.position;
+        }
         player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         player.SetActive(true);
     }
@@ -203,8 +213,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(respawnTime);
 
-        player.transform.position = new Vector2(Random.Range(leftSpawnPoint,rightSpawnPoint), 1f);
-        player.SetActive(true);
+        resetPlayerPosition(player);
 
         PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
 
