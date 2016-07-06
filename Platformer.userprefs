@@ -1,14 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/DragPiece2D.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/Level.cs">
     <Files>
-      <File FileName="Assets/scripts/Level.cs" Line="64" Column="17" />
-      <File FileName="Assets/scripts/Bomb.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/levelBuilder/LevelBuilder.cs" Line="36" Column="86" />
-      <File FileName="Assets/scripts/levelBuilder/MouseManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/GameManager.cs" Line="108" Column="15" />
-      <File FileName="Assets/scripts/PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/DragPiece2D.cs" Line="16" Column="1" />
+      <File FileName="Assets/scripts/Level.cs" Line="37" Column="13" />
+      <File FileName="Assets/scripts/levelBuilder/LevelBuilder.cs" Line="97" Column="33" />
+      <File FileName="Assets/scripts/FlagHandler.cs" Line="52" Column="18" />
+      <File FileName="Assets/scripts/BaseHandler.cs" Line="18" Column="1" />
+      <File FileName="Assets/scripts/GameManager.cs" Line="214" Column="54" />
+      <File FileName="Assets/scripts/Player.cs" Line="8" Column="2" />
+      <File FileName="Assets/scripts/Bomb.cs" Line="24" Column="1" />
+      <File FileName="Assets/scripts/PlayerController.cs" Line="124" Column="4" />
+      <File FileName="Assets/scripts/PlayerDeath.cs" Line="31" Column="10" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

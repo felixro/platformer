@@ -17,9 +17,15 @@ public class Bottom : MonoBehaviour
             {
                 playerDeath.die();
             }
-        }else
+        }
+        else if (other.gameObject.CompareTag("Flag"))
         {
-            // anything non-player simply gets destroyed
+            FlagHandler flagHandler = other.gameObject.GetComponent<FlagHandler>();
+            flagHandler.resetPosition();
+        }
+        else
+        {
+            // anything else gets destroyed
             Destroy(other.gameObject);
         }
     }
