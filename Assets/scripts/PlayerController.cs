@@ -22,10 +22,10 @@ public class PlayerController : MonoBehaviour
 	public float inAirDamping = 5f;
 	public float jumpHeight = 3f;
 
-    public GameObject bombPrefab;
-
     public AudioClip jumpAudio;
     public AudioClip pickupAudio;
+
+    private WeaponHandler weaponHandler;
 
 	[HideInInspector]
 	private float normalizedHorizontalSpeed = 0;
@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
 
     private float defaultRunSpeed;
     private float defaultJumpHeight;
+
+    private int currentMovementDirection;
 
     private AudioSource audioSource;
 
@@ -71,6 +73,8 @@ public class PlayerController : MonoBehaviour
         defaultJumpHeight = jumpHeight;
 
         audioSource = GetComponent<AudioSource>();
+
+        weaponHandler = GetComponent<WeaponHandler>();
 	}
 
 	#region Event Listeners
@@ -108,6 +112,8 @@ public class PlayerController : MonoBehaviour
             {
 				//_animator.Play( Animator.StringToHash( "Run" ) );
             }
+
+            currentMovementDirection = 1;
 		}
         else if( Input.GetKey( leftKey ) )
 		{
@@ -119,6 +125,8 @@ public class PlayerController : MonoBehaviour
             {
 				//_animator.Play( Animator.StringToHash( "Run" ) );
             }
+
+            currentMovementDirection = -1;
 		}
 		else
 		{
@@ -146,7 +154,6 @@ public class PlayerController : MonoBehaviour
             _animator.SetTrigger("Jump");
 		}
 
-
 		// apply horizontal speed smoothing it. dont really do this with Lerp. Use SmoothDamp or something that provides more control
 		var smoothedMovementFactor = _controller.isGrounded ? groundDamping : inAirDamping; // how fast do we change direction?
 		_velocity.x = Mathf.Lerp( _velocity.x, normalizedHorizontalSpeed * runSpeed, Time.deltaTime * smoothedMovementFactor );
@@ -166,42 +173,39 @@ public class PlayerController : MonoBehaviour
 
 		// grab our current _velocity to use as a base for all calculations
 		_velocity = _controller.velocity;
+
+        /*
+        Vector3 localVelocity = transform.InverseTransformVector(_velocity);
+
+        if (localVelocity.x <= -.5f)
+        {
+            currentMovementDirection = -1;
+        }else if (localVelocity.x >= 0.5f)
+        {
+            currentMovementDirection = 1;
+        }
+
+        Debug.Log(currentMovementDirection);
+        */
 	}
 
     void handleInput()
     {
         if (Input.GetKeyDown(shootKey))
         {
-            GameObject bombObject = Instantiate (bombPrefab, transform.position, Quaternion.identity) as GameObject;
-
-            Bomb bomb = bombObject.GetComponent<Bomb>();
-
-            bomb.setOwner(gameObject);
-
-            Rigidbody2D body = bombObject.GetComponent<Rigidbody2D>();
-            body.AddForce(
+            weaponHandler.Fire(
                 new Vector2(
                     _controller.velocity.x * 10f, 
                     Mathf.Sign(_controller.velocity.y) * 20f
                 ),
-                ForceMode2D.Force
+                getMovementDirection()
             );
         }
     }
 
     public int getMovementDirection()
     {
-        Vector3 localVelocity = transform.InverseTransformVector(_velocity);
-
-        if (localVelocity.x <= -.5f)
-        {
-            return -1;
-        }else if (localVelocity.x >= 0.5f)
-        {
-            return 1;
-        }
-
-        return 0;
+        return currentMovementDirection;
     }
 
     public void resetPosition()
