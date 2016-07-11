@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public KeyboardManager keyboardManager;
     public PowerUpManager powerupManager;
+    public Weapon laserWeaponPrefab;
 
     // keyboard config
     private KeyCode leftKey;
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip pickupAudio;
 
     private WeaponHandler weaponHandler;
+    private Weapon laserWeapon;
 
 	[HideInInspector]
 	private float normalizedHorizontalSpeed = 0;
@@ -75,6 +77,9 @@ public class PlayerController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         weaponHandler = GetComponent<WeaponHandler>();
+
+        laserWeapon = Instantiate (laserWeaponPrefab, Vector2.one, Quaternion.identity) as Weapon;
+        laserWeapon.transform.parent = transform;
 	}
 
 	#region Event Listeners
@@ -173,20 +178,6 @@ public class PlayerController : MonoBehaviour
 
 		// grab our current _velocity to use as a base for all calculations
 		_velocity = _controller.velocity;
-
-        /*
-        Vector3 localVelocity = transform.InverseTransformVector(_velocity);
-
-        if (localVelocity.x <= -.5f)
-        {
-            currentMovementDirection = -1;
-        }else if (localVelocity.x >= 0.5f)
-        {
-            currentMovementDirection = 1;
-        }
-
-        Debug.Log(currentMovementDirection);
-        */
 	}
 
     void handleInput()

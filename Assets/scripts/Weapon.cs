@@ -5,7 +5,6 @@ public class Weapon : MonoBehaviour
 {
     private Vector3 localPosition;
     private Vector3 localScale;
-    private bool isMovingLeft;
 
     void Update()
     {
