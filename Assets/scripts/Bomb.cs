@@ -81,6 +81,7 @@ public class Bomb : MonoBehaviour
             {
                 particleSystems[i].Play();
                 isExploding = true;
+                GetComponent<SpriteRenderer>().enabled = false;
 
                 break;
             }

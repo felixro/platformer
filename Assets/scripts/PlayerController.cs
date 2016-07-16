@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private KeyCode jumpKey;
     private KeyCode downKey;
     private KeyCode shootKey;
+    private KeyCode switchWeaponKey;
 
 	// movement config
 	public float gravity = -25f;
@@ -26,8 +27,8 @@ public class PlayerController : MonoBehaviour
     public AudioClip jumpAudio;
     public AudioClip pickupAudio;
 
-    private WeaponHandler weaponHandler;
-    private Weapon laserWeapon;
+    private WeaponHandler _weaponHandler;
+    private Weapon _laserWeapon;
 
 	[HideInInspector]
 	private float normalizedHorizontalSpeed = 0;
@@ -61,14 +62,16 @@ public class PlayerController : MonoBehaviour
             rightKey = keyboardManager.player1RightKey;
             jumpKey = keyboardManager.player1JumpKey;
             downKey = keyboardManager.player1DownKey;
-            shootKey = keyboardManager.player1ShootKey;            
+            shootKey = keyboardManager.player1ShootKey;
+            switchWeaponKey = keyboardManager.player1SwitchWeaponKey;
         }else
         {
             leftKey = keyboardManager.player2LeftKey;
             rightKey = keyboardManager.player2RightKey;
             jumpKey = keyboardManager.player2JumpKey;
             downKey = keyboardManager.player2DownKey;
-            shootKey = keyboardManager.player2ShootKey;    
+            shootKey = keyboardManager.player2ShootKey;
+            switchWeaponKey = keyboardManager.player2SwitchWeaponKey;
         }
 
         defaultRunSpeed = runSpeed;
@@ -76,10 +79,11 @@ public class PlayerController : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
 
-        weaponHandler = GetComponent<WeaponHandler>();
+        _weaponHandler = GetComponent<WeaponHandler>();
 
-        laserWeapon = Instantiate (laserWeaponPrefab, Vector2.one, Quaternion.identity) as Weapon;
-        laserWeapon.transform.parent = transform;
+        _laserWeapon = Instantiate (laserWeaponPrefab, Vector2.one, Quaternion.identity) as Weapon;
+        _laserWeapon.transform.parent = transform;
+        _laserWeapon.gameObject.SetActive(false);
 	}
 
 	#region Event Listeners
@@ -184,13 +188,28 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(shootKey))
         {
-            weaponHandler.Fire(
+            _weaponHandler.Fire(
                 new Vector2(
                     _controller.velocity.x * 10f, 
                     Mathf.Sign(_controller.velocity.y) * 20f
                 ),
                 getMovementDirection()
             );
+        }
+
+        if (Input.GetKeyDown(switchWeaponKey))
+        {
+            _weaponHandler.SwitchWeapon();
+
+            // FIXME: This should be handled better
+            if (_weaponHandler._weaponType == WeaponType.LASER)
+            {
+                _laserWeapon.gameObject.SetActive(true);
+            }
+            else
+            {
+                _laserWeapon.gameObject.SetActive(false);
+            }
         }
     }
 

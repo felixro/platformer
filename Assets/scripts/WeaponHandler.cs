@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class WeaponHandler : MonoBehaviour {
 
@@ -66,5 +67,14 @@ public class WeaponHandler : MonoBehaviour {
         );  
 
         laser.PlaySound();
+    }
+
+    public void SwitchWeapon()
+    {
+        int nrOfWeapons = Enum.GetValues(typeof(WeaponType)).Length;
+        int curWeaponType = (int)_weaponType;
+        int nextWeaponType = (curWeaponType + 1) % nrOfWeapons;
+
+        _weaponType = (WeaponType)nextWeaponType;
     }
 }
