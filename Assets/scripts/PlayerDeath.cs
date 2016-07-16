@@ -32,8 +32,10 @@ public class PlayerDeath : MonoBehaviour
             flagHandler.dropFlag();
         }
 
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
         isRespawning = false;
+
+        GetComponent<WeaponHandler>().ResetWeapon();
 
         GameObject deathPrefab = Instantiate (deadPlayerPrefab, transform.position, Quaternion.identity) as GameObject;
         Transform deathTransform = deathPrefab.transform;

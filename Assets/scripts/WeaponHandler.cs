@@ -9,8 +9,23 @@ public class WeaponHandler : MonoBehaviour {
 
     public WeaponType _weaponType;
 
+    public float laserShotFrequency = 2f;
+    public float bombShotFrequency = 1f;
+
+    private bool _canFire = true;
+
+    public void ResetWeapon()
+    {
+        _canFire = true;
+    }
+
     public void Fire(Vector2 force, int movementDirection)
     {
+        if (!_canFire)
+        {
+            return;
+        }
+
         if (_weaponType == WeaponType.BOMB)
         {
             FireBomb(force);
@@ -39,6 +54,8 @@ public class WeaponHandler : MonoBehaviour {
             force,
             ForceMode2D.Force
         );
+
+        StartCoroutine(Fire(bombShotFrequency));
     }
 
     private void FireLaser(int movementDirection)
@@ -67,6 +84,8 @@ public class WeaponHandler : MonoBehaviour {
         );  
 
         laser.PlaySound();
+
+        StartCoroutine(Fire(laserShotFrequency));
     }
 
     public void SwitchWeapon()
@@ -76,5 +95,12 @@ public class WeaponHandler : MonoBehaviour {
         int nextWeaponType = (curWeaponType + 1) % nrOfWeapons;
 
         _weaponType = (WeaponType)nextWeaponType;
+    }
+
+    IEnumerator Fire(float fireFrequency)
+    {
+        _canFire = false;
+        yield return new WaitForSeconds(1f/fireFrequency);
+        _canFire = true;
     }
 }
