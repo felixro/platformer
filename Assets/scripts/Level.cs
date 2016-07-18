@@ -14,6 +14,7 @@ public class Level : MonoBehaviour
     public GameObject redFlag;
     public GameObject player1Base;
     public GameObject player2Base;
+    public GameObject enemy;
 
     private Tile[,,] tiles;
 
@@ -52,6 +53,12 @@ public class Level : MonoBehaviour
                 new Vector2(
                     storedLevel._basePlayer2Position._x, 
                     storedLevel._basePlayer2Position._y
+                );
+
+            enemy.transform.localPosition = 
+                new Vector2(
+                    storedLevel._enemyPosition._x, 
+                    storedLevel._enemyPosition._y
                 );
 
             fs.Close();

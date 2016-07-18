@@ -26,11 +26,6 @@ public class Laser : MonoBehaviour
     {
         StartCoroutine(ExecuteAfterTime(explosionDelayInSec));
     }
-        
-	void Update () 
-    {
-        transform.rotation = Quaternion.identity;
-	}
 
     public void PlaySound()
     {
